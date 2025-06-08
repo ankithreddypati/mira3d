@@ -1,0 +1,12 @@
+
+.ipynb_checkpoints
+.Trash-1000
+brush
+colmap
+data/*
+upload/*
+frontend/node_modules
+frontend/dist
+export
+**/.ipynb_checkpoints/
+export/*
