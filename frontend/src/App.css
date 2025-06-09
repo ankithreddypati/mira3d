@@ -40,3 +40,29 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.gallery-container {
+  padding: 20px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.splat-card {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  width: 160px;
+  text-align: center;
+  background: white;
+}
+
+.file-name {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+

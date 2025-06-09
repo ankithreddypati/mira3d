@@ -1,2 +1,9 @@
-rembg[gpu]
 plyfile
+onnxruntime-gpu
+tqdm 
+nvidia-ml-py3
+fastapi
+uvicorn 
+python-multipart 
+aiofiles 
+nest_asyncio

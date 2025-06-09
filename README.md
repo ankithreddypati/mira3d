@@ -5,7 +5,7 @@
 
 ![Demo 1](assets/demo1.png)
 ![Demo 2](assets/demo2.png)
-![Demo 3](assets/demo3.png)
+
 
 ## ✨ Features
 
@@ -25,6 +25,7 @@ Mira3D AI enhanced 3D reconstructions can be applied across multiple industries:
 - 🛍️ **Retail** – 3D product models and virtual try-on experiences
 - 📸 **Photography & Film** – Environment capture and visual effects
 - 🏭 **Manufacturing** –  Quality control and part documentation with isolated object reconstruction
+
 
 ##  Quick Start
 
@@ -112,30 +113,55 @@ Mira3D AI enhanced 3D reconstructions can be applied across multiple industries:
 
 ### Running the Application
 
-1. **If you want to understand more about gaussain splatting before deploying on MLFLOW**
+1. **(OPTIONAL) At this point you can generate splats locally .To understand how Gaussian Splatting works and test it out:**
    ```bash
    cd notebooks
-   # Run gaussiansplattest.ipynb to understand the workflow
+   # Run gaussiansplatting.ipynb to understand the workflow
    ```
 
-2. **To Launch the main application**
+2. **To Test the main application with UI**
+     ```bash
+   cd notebooks
+   # Run splatserver.ipynb to start FASTAPI server copy the url to be pasted in UI
+   ```
+3. **Configure the Frontend**
+     ```bash
+   cd frontend/src/components
+   # Open chatbot.jsx and paste the backend URL where indicated.
+   # From the root frontend directory, build and serve the app:
+   npm install
+   npm run build
+   serve dist
+   # npm install -g serve if needed
+   ```
+
+##  Usage
+
+1. **Upload a video** through the web interface 
+2. **Wait for processing** it takes atleast 5 to 10 minutes depending on your hardware and video meanwhile you can check
+   ```bash
+   watch -n 1 nvidia-smi
+    # here different processes like ffmpeg , colmap , onnxruntime operations and brush can be seen using your gpu
+   ```
+3. **View and edit** your 3D model in the interactive editor
+4. **Download your splat** from the chat response
+
+
+##  MLFLOW
+
+1. **To Launch the main application with MLFlow UI (Note: Vulkan's NVIDIA ICD is not mounting properly in the new MLflow container, causing the brush to fall back to CPU and fail.) **
    ```bash
    cd notebooks
    # Run 3dreconstructionpipeline.ipynb
    # Click on the generated URL to access the web interface
+   #  
    ```
 
-3. **Deploy to HP AI Studio**
+2. **Deploy to HP AI Studio**
    - Navigate to the Deployments page in HP AI Studio
    - Click on the provided URL to access the application
    - Try the demonstration at the top of the page
 
-##  Usage
-
-1. **Upload a video** through the web interface
-2. **Wait for processing** – the system will generate a Gaussian splat
-3. **View and edit** your 3D model in the interactive editor
-4. **Export your splat** and view it in the gallery
 
 ## My Development Environment
 
@@ -145,16 +171,23 @@ Mira3D AI enhanced 3D reconstructions can be applied across multiple industries:
 - **CUDA Version**: 12.8
 - **Driver Version**: 570.144
 
+## App Flow
+
+![Flow](assets/miradesign.png)
+
 ##  Project Structure
 
 ```
 Mira3D/
 ├── notebooks/
-│   ├── gaussiansplattest.ipynb          # Testing pipeline
-│   └── 3dreconstructionpipeline.ipynb   # Main application
+│   ├── gaussiansplatting.ipynb          # Testing pipeline
+│   ├── splatserver.ipynb                # Run 3DGS FASTAPI server
+│   └── 3dreconstructionpipeline.ipynb   # Main MLFLOW application
 │   └── toolchain_mlflowartifact.ipynb   # To test out exported binaries with mlflow artifacts
-├── demo                                 # dist folder of frontend to test locally run "serve demo"
-├── frontend                             # React three fiber splats viewer
+│   └── toolcheckresponse.json           # MLFlow container bundled tool check response
+│   └── tensorrttest.ipynb               # To convert the onnx model to trt and get faster inference
+│   └── gsplatimplementation.ipynb       # gsplat incompatability issues
+├── frontend                             # React three fiber UI
 ├── setup.sh                             # Installation script
 ├── export_binaries.sh                   # Binary export script
 └── README.md                             
@@ -163,6 +196,8 @@ Mira3D/
 ##  Troubleshooting
 
 ### Common Issues
+
+**MLflow notebook workflow**: Sometimes the workflow stuck on preparing at this point you can run the gaussian splatting ipynb serve demo and put your splat there to test.
 
 **GPU not detected for brush**: Follow the Vulkan configuration steps in the installation guide.
 
@@ -174,3 +209,26 @@ chmod +x setup.sh export_binaries.sh
 ```
 
 **Container persistence**: Use the export script to maintain dependencies across container restarts. I hope there is no use of this from the new update
+
+
+## Gaussian Splatting Notes
+
+To implement splatting, I initially started with [gsplat](https://github.com/ashawkey/gsplat) and the [official Gaussian Splatting implementation](https://github.com/graphdeco-inria/gaussian-splatting). However, I encountered compatibility issues with the **Blackwell architecture (sm_120)**.
+
+![gsplaterror](assets/gsplat.png)
+
+After experimenting with a few alternatives, I settled on using [brush](https://github.com/ArthurBrussee/brush), which leverages **WGPU with Vulkan** for GPU rendering.
+
+My Immediate goal is to resolve the compatibility issues and eventually migrate back to **gsplat**, which offers faster splatting using optimized CUDA and takes advantage of higher GPU VRAM availability.
+
+[Demo](https://youtu.be/fwqmQgTEz2o?si=316RTDqUdh-jYkMO)
+
+## References
+https://colmap.github.io/
+https://www.digitalocean.com/community/tutorials/photogrammetry-pipeline-on-gpu-droplet
+
+https://github.com/graphdeco-inria/gaussian-splatting 
+
+https://docs.gsplat.studio/main/ 
+ 
+https://github.com/ZhengPeng7/BiRefNet

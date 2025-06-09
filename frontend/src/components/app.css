@@ -297,3 +297,71 @@
   padding: 8px;
   border-top: 1px solid #eee;
 }
+
+
+.splat-card {
+  width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease;
+}
+
+.splat-card:hover {
+  transform: scale(1.03);
+}
+
+.preview-box {
+  height: 120px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-placeholder {
+  font-size: 14px;
+  color: #888;
+}
+
+.splat-name {
+  font-weight: bold;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.load-btn {
+  padding: 8px 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.load-btn:hover {
+  background-color: #005ac1;
+}
+
+.gallery-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+
